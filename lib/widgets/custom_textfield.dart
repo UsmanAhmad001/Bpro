@@ -6,25 +6,25 @@ Widget customTextField({
   Widget? prefixIcon,
   String? errorText,
   TextStyle? hintStyle,
-  Color bordercolor=Colors.grey,
-  Color focusedBorderColor=const Color.fromARGB(255, 177, 169, 156),
-  Color cursorColor=AppColors.appPrimaryColor,
-  Color backgroundColor=AppColors.transparent,
-
-  IconData? suffixIcon,
+  Color bordercolor = Colors.grey,
+  Color focusedBorderColor = const Color.fromARGB(255, 177, 169, 156),
+  Color cursorColor = AppColors.appPrimaryColor,
+  Color backgroundColor = AppColors.transparent,
   bool isPassword = false,
+  bool obscureText = false,
   TextEditingController? controller,
   TextInputType keyboardType = TextInputType.text,
   String? Function(String?)? validator,
   void Function(String)? onChanged,
   int maxLines = 1,
   int minLines = 1,
+  VoidCallback? onSuffixTap,
 }) {
   return TextFormField(
     cursorColor: cursorColor,
     validator: validator,
     controller: controller,
-    obscureText: isPassword,
+    obscureText: obscureText,
     keyboardType: keyboardType,
     onChanged: onChanged,
     maxLines: maxLines,
@@ -34,8 +34,16 @@ Widget customTextField({
       fillColor: backgroundColor,
       hintText: hintText,
       hintStyle: hintStyle,
-      prefixIcon: prefixIcon ,
-      suffixIcon: suffixIcon != null ? Icon(suffixIcon) : null,
+      prefixIcon: prefixIcon,
+      suffixIcon: isPassword
+          ? IconButton(
+              icon: Icon(
+                obscureText ? Icons.visibility_off : Icons.visibility,
+                color: AppColors.darkGrey,
+              ),
+              onPressed: onSuffixTap,
+            )
+          : null,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
       ),

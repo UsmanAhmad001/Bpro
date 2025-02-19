@@ -135,6 +135,7 @@ class DepositeController extends GetxController {
       log("STATUS CODE ${response.statusCode}");
 
       if (response.statusCode == 200) {
+        selectedIndex.value = -1;
         imageFile.value = null;
         amount.clear();
         // selectedIndex.value = -1;

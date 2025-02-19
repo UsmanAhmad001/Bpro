@@ -1,13 +1,13 @@
 import 'package:bpro/controller/auth_controller.dart';
 import 'package:bpro/controller/bpro_controller.dart';
 import 'package:bpro/controller/deposite_controller.dart';
+import 'package:bpro/controller/withdrawal_controller.dart';
 import 'package:bpro/extensions/size_extention.dart';
 import 'package:bpro/extensions/sizebox_extention.dart';
 import 'package:bpro/screens/deposit/deposit_screen.dart';
 import 'package:bpro/screens/history/history_screen.dart';
 import 'package:bpro/screens/webview.dart';
 import 'package:bpro/screens/withdrawal/withdrawal_screen.dart';
-import 'package:bpro/service/history_transaction_service.dart';
 import 'package:bpro/utils/app_colors.dart';
 import 'package:bpro/utils/app_icons.dart';
 import 'package:bpro/utils/app_images.dart';
@@ -19,7 +19,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class BproDashboardScreen extends StatefulWidget {
-  BproDashboardScreen({super.key});
+  const BproDashboardScreen({super.key});
 
   @override
   State<BproDashboardScreen> createState() => _BproDashboardScreenState();
@@ -29,15 +29,16 @@ class _BproDashboardScreenState extends State<BproDashboardScreen> {
   final DepositeController depositeController = Get.put(DepositeController());
   final BproController bproController = Get.put(BproController());
   final AuthController authController = Get.find();
+  final WithdrawalController withdrawalController =
+      Get.put(WithdrawalController());
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // Load user data when the screen opens
-  //   log("ONInIt");
-  //   authController.userApi();
-  //   log("AFTer Onit");
-  // }
+  @override
+  void initState() {
+    super.initState();
+
+    bproController.userApi();
+    //  authController.removeUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,57 +121,132 @@ class _BproDashboardScreenState extends State<BproDashboardScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              height: 150,
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: AppColors.appPrimaryColor,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20)),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CustomText(
-                                    text: "Welcome to BPRO",
-                                    color: AppColors.white,
-                                    fontSize: 20,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      depositeController.copyText(
-                                          "User Name: ${authController.usernames}",
-                                          context);
-                                    },
-                                    child: CustomText(
-                                      text:
-                                          "BP UserName: ${bproController.userName}",
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, bottom: 20, top: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CustomText(
+                                      text: "Welcome to BPRO",
                                       color: AppColors.white,
-                                      fontWeight: FontWeight.w500,
                                       fontSize: 18,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      depositeController.copyText(
-                                          "BP Password: ${bproController.bpPassword}",
-                                          context);
-                                    },
-                                    child: CustomText(
-                                      text:
-                                          "BP Password: ${bproController.bpPassword}",
-                                      color: AppColors.white,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 18,
+                                    10.height,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        GestureDetector(
+                                            onTap: () {
+                                              depositeController.copyText(
+                                                  "User Name: ${authController.usernames}",
+                                                  context);
+                                            },
+                                            child: CustomText(
+                                              text: "User Name: ",
+                                              color: AppColors.white,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 17,
+                                            )),
+                                        Obx(() {
+                                          return CustomText(
+                                            text: "${bproController.userName}",
+                                            color: AppColors.white,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16,
+                                          );
+                                        })
+                                      ],
                                     ),
-                                  ),
-                                  CustomText(
-                                    text: "Status: ${authController.mode}",
-                                    color: AppColors.white,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18,
-                                  ),
-                                ],
+                                    7.height,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        GestureDetector(
+                                            onTap: () {
+                                              depositeController.copyText(
+                                                  "Bp User Name: ${authController.bpUserName}",
+                                                  context);
+                                            },
+                                            child: CustomText(
+                                              text: "BP UserName: ",
+                                              color: AppColors.white,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16,
+                                            )),
+                                        Obx(() {
+                                          return CustomText(
+                                            text:
+                                                "${bproController.bpUserName}",
+                                            color: AppColors.white,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16,
+                                          );
+                                        })
+                                      ],
+                                    ),
+                                    7.height,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            depositeController.copyText(
+                                                "BP Password: ${bproController.bpPassword}",
+                                                context);
+                                          },
+                                          child: CustomText(
+                                            text: "BP Password:",
+                                            color: AppColors.white,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        Obx(() {
+                                          return CustomText(
+                                            text:
+                                                "${bproController.bpPassword}",
+                                            color: AppColors.white,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16,
+                                          );
+                                        })
+                                      ],
+                                    ),
+                                    7.height,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        CustomText(
+                                          text: "Status:",
+                                          color: AppColors.white,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16,
+                                        ),
+                                        Obx(() {
+                                          return CustomText(
+                                            text: "${bproController.status}",
+                                            color: AppColors.white,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16,
+                                          );
+                                        })
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -180,129 +256,135 @@ class _BproDashboardScreenState extends State<BproDashboardScreen> {
                     10.height,
                     Expanded(
                       child: GridView(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          mainAxisExtent: 70,
-                        ),
-                        padding: EdgeInsets.all(16),
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Get.to(() => DepositScreen());
-                              //DepositeService depositeService=DepositeService();
-                              // depositeController.fetchUserBank();
-                              // depositeService.fetchBank();
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.darkpurple,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: Center(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(AppIcons.deposit,
-                                        width: 35, color: AppColors.white),
-                                    10.width,
-                                    CustomText(
-                                        fontSize: 18,
-                                        text: "Deposit",
-                                        color: AppColors.white),
-                                  ],
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 10,
+                            mainAxisExtent: 70,
+                          ),
+                          padding: EdgeInsets.all(16),
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(() => DepositScreen());
+                                //DepositeService depositeService=DepositeService();
+                                // depositeController.fetchUserBank();
+                                // depositeService.fetchBank();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.darkpurple,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                ),
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(AppIcons.deposit,
+                                          width: 30, color: AppColors.white),
+                                      10.width,
+                                      CustomText(
+                                          fontSize: 16,
+                                          text: "Deposit",
+                                          color: AppColors.white),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Get.to(() => WithdrawalScreen());
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.darkpurple,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                            if (authController.mode == "Active") ...[
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(() => WithdrawalScreen());
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.darkpurple,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(AppIcons.widdrawl,
+                                          color: AppColors.white, width: 30),
+                                      10.width,
+                                      CustomText(
+                                          fontSize: 16,
+                                          text: "Withdrawal",
+                                          color: AppColors.white),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(AppIcons.widdrawl,
-                                      color: AppColors.white, width: 35),
-                                  10.width,
-                                  CustomText(
-                                      fontSize: 18,
-                                      text: "Withdrawal",
-                                      color: AppColors.white),
-                                ],
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(() => HistoryScreen());
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.darkpurple,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(AppIcons.historyIcon,
+                                          width: 30, color: AppColors.white),
+                                      15.width,
+                                      CustomText(
+                                          text: "History",
+                                          fontSize: 16,
+                                          color: AppColors.white),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                               Get.to(HistoryScreen());
-                            
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.darkpurple,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(AppIcons.historyIcon,
-                                      width: 35, color: AppColors.white),
-                                  15.width,
-                                  CustomText(
-                                      text: "History",
-                                      fontSize: 18,
-                                      color: AppColors.white),
-                                ],
-                              ),
-                            ),
-                          ),
-                          authController.mode == "active"
-                              ? GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => WebviewScreen());
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColors.darkpurple,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20)),
-                                    ),
-                                    child: Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(AppIcons.webview,
-                                              width: 35,
-                                              color: AppColors.white),
-                                          10.width,
-                                          CustomText(
-                                              fontSize: 18,
-                                              text: "Web View",
-                                              color: AppColors.white),
-                                        ],
-                                      ),
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(() => WebviewScreen());
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.darkpurple,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(AppIcons.webview,
+                                            width: 30, color: AppColors.white),
+                                        10.width,
+                                        CustomText(
+                                            fontSize: 16,
+                                            text: "Web View",
+                                            color: AppColors.white),
+                                      ],
                                     ),
                                   ),
-                                )
-                              : SizedBox.shrink()
-                        ],
-                      ),
+                                ),
+                              ),
+                            ] else
+                              SizedBox.shrink(),
+                          ]),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(AppImages.whattasapplogo, height: 35),
+                        GestureDetector(
+                            onTap: () {
+                              bproController.launchUrl("https://wa.me/",
+                                  phonenumber:
+                                      withdrawalController.whatsappNumber);
+                            },
+                            child: Image.asset(AppImages.whattasapplogo,
+                                height: 35)),
                         15.width,
                         Tooltip(
                           message: "Help",

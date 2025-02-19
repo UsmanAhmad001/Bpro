@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 class BproController extends GetxController {
   AuthController authController = Get.find();
   var loading = false.obs;
-  
 
   var usernames = "";
   var userPassword = "";
@@ -22,15 +21,14 @@ class BproController extends GetxController {
   var userName = "".obs;
   var bpUserName = "".obs;
   var bpPassword = "".obs;
-  var status = "";
+  var status = "".obs;
   var token = "";
- @override
-Future<void> onInit() async {
-  super.onInit();
-  await authController.getUserData();  
-  userApi();
-}
-
+  @override
+  Future<void> onInit() async {
+    super.onInit();
+    await authController.getUserData();
+    await userApi();
+  }
 
   Future launchUrl(String url, {String? phonenumber}) async {
     try {
@@ -80,10 +78,11 @@ Future<void> onInit() async {
         userName.value = data["Username"] ?? "";
         bpUserName.value = data["BPusername"] ?? "";
         bpPassword.value = data["BPpassword"] ?? "";
+        status.value = data["status"] ?? "";
 
         log("This is web url: $weburl");
         log("This is Username: $userName");
-        log("This is Username and Password: $bpPassword and $bpUserName");
+        log("This is Username and Password: $bpPassword and $bpUserName and $status");
       } else {
         log("API ERROR: ${response.statusCode} - ${response.body}");
       }
@@ -94,5 +93,4 @@ Future<void> onInit() async {
       loading(false);
     }
   }
-  
 }

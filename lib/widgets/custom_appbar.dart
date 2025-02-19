@@ -15,7 +15,7 @@ PreferredSizeWidget customAppBar(String title) {
       title: CustomText(
         text: title,
         color: AppColors.white,
-        fontSize: 25,
+        fontSize: 23,
         fontWeight: FontWeight.bold,
       ),
       centerTitle: true,
@@ -26,7 +26,6 @@ PreferredSizeWidget customAppBar(String title) {
             image: AssetImage(AppImages.background),
             fit: BoxFit.cover,
           ),
-          
         ),
       ),
     ),

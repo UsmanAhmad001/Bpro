@@ -18,8 +18,10 @@ class WithdrawalController extends GetxController {
   var amount = TextEditingController();
   var withdrawTimeFrom = ''.obs;
   var withdrawTimeTo = ''.obs;
-  var whatsappNumber = ''.obs;
-    var showButton = false.obs;
+  var whatsappNumber = '';
+  var showButton = false.obs;
+  var privacy = "".obs;
+  var disclaimer = "".obs;
 
   var description = TextEditingController();
 
@@ -124,45 +126,49 @@ class WithdrawalController extends GetxController {
       log("${response.statusCode}");
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        withdrawTimeFrom.value = data['data'][0]['withdraw_time_from'];
-        withdrawTimeTo.value = data['data'][0]['withdraw_time_to'];
-        whatsappNumber.value = data['data'][0]['whatsapp'].toString();
+        withdrawTimeFrom.value =
+            data['data'][0]['withdraw_time_from'].toString();
+        withdrawTimeTo.value = data['data'][0]['withdraw_time_to'].toString();
+        whatsappNumber = data['data'][0]['whatsapp'].toString();
+        privacy.value = data['data'][0]["privacy"].toString();
+        disclaimer.value = data['data'][0]["disclaimer"].toString();
 
-        log("Withdrawal time fetched: $withdrawTimeFrom - $withdrawTimeTo");
+        log("Withdrawal time fetched: ${withdrawTimeFrom.value} - ${withdrawTimeTo.value}");
         log("Whatsapp number: $whatsappNumber");
+        log("Privacy: $disclaimer");
+
         checkTime();
       }
     } catch (e) {
-      log("There is an error in widrawal time $e");
+      log("There is an error in withdrawal time: $e");
     }
   }
- void checkTime() {
-  if (withdrawTimeFrom.value.isNotEmpty && withdrawTimeTo.value.isNotEmpty) {
-    try {
-      
-      final currentTime = DateFormat('HH:mm').format(DateTime.now());
-      
-      final fromTime = withdrawTimeFrom.value;
-      final toTime = withdrawTimeTo.value;
 
-      log("Current Time: $currentTime");
-      log("From Time: $fromTime");
-      log("To Time: $toTime");
+  void checkTime() {
+    if (withdrawTimeFrom.value.isNotEmpty && withdrawTimeTo.value.isNotEmpty) {
+      try {
+        final currentTime = DateFormat('HH:mm').format(DateTime.now());
 
-      if (currentTime.compareTo(fromTime) >= 0 && currentTime.compareTo(toTime) <= 0) {
-        showButton.value = true;
-        log("Withdraw is allowed.");
-      } else {
-        showButton.value = false;
-        log("Withdraw is only available from $fromTime to $toTime");
-       // Get.snackbar('Notice', 'Withdraw is only available from $fromTime to $toTime');
+        final fromTime = withdrawTimeFrom.value;
+        final toTime = withdrawTimeTo.value;
+
+        log("Current Time: $currentTime");
+        log("From Time: $fromTime");
+        log("To Time: $toTime");
+
+        if (currentTime.compareTo(fromTime) >= 0 &&
+            currentTime.compareTo(toTime) <= 0) {
+          showButton.value = true;
+          log("Withdraw is allowed.");
+        } else {
+          showButton.value = false;
+          log("Withdraw is only available from $fromTime to $toTime");
+          // Get.snackbar('Notice', 'Withdraw is only available from $fromTime to $toTime');
+        }
+      } catch (e) {
+        log("Error parsing withdrawal time: $e");
+        Get.snackbar('Error', 'Invalid withdrawal time format.');
       }
-    } catch (e) {
-      log("Error parsing withdrawal time: $e");
-      Get.snackbar('Error', 'Invalid withdrawal time format.');
     }
   }
-}
-
-
 }

@@ -20,38 +20,32 @@ class DepositScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar("Deposit"),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(AppImages.background),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
+        appBar: customAppBar("Deposit"),
+        body: Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(AppImages.background),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 30),
-            child: Obx(() {
-              return depositeController.loading.value
-                  ? Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.appPrimaryColor,
-                      ),
-                    )
-                  : Form(
-                    key: _formKey,
-                    child: Column(
+            child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 10, top: 30),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomText(
@@ -97,7 +91,7 @@ class DepositScreen extends StatelessWidget {
                                   bool isSelected =
                                       depositeController.selectedIndex.value ==
                                           index;
-                    
+
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: 10),
                                     child: GestureDetector(
@@ -139,7 +133,8 @@ class DepositScreen extends StatelessWidget {
                                                           ? AppColors.white
                                                           : AppColors
                                                               .appPrimaryColor,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 15,
                                                     ),
                                                     CustomText(
@@ -149,7 +144,8 @@ class DepositScreen extends StatelessWidget {
                                                           ? AppColors.white
                                                           : AppColors
                                                               .appPrimaryColor,
-                                                      fontWeight: FontWeight.w500,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                       fontSize: 15,
                                                     ),
                                                     CustomText(
@@ -159,7 +155,8 @@ class DepositScreen extends StatelessWidget {
                                                           ? AppColors.white
                                                           : AppColors
                                                               .appPrimaryColor,
-                                                      fontWeight: FontWeight.w500,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                       fontSize: 15,
                                                     ),
                                                   ],
@@ -177,7 +174,8 @@ class DepositScreen extends StatelessWidget {
                                                   Icons.copy,
                                                   color: isSelected
                                                       ? AppColors.white
-                                                      : AppColors.appPrimaryColor,
+                                                      : AppColors
+                                                          .appPrimaryColor,
                                                 ),
                                               ),
                                             ],
@@ -218,11 +216,6 @@ class DepositScreen extends StatelessWidget {
                           20.height,
                         ],
                       ),
-                  );
-            }),
-          ),
-        ),
-      ),
-    );
+                    )))));
   }
 }

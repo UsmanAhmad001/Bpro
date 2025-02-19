@@ -1,4 +1,6 @@
 import 'package:bpro/controller/auth_controller.dart';
+import 'package:bpro/controller/bpro_controller.dart';
+import 'package:bpro/controller/withdrawal_controller.dart';
 import 'package:bpro/extensions/size_extention.dart';
 import 'package:bpro/extensions/sizebox_extention.dart';
 import 'package:bpro/screens/auth/forget_password.dart';
@@ -14,6 +16,9 @@ import 'package:get/get.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
   final AuthController authController = Get.find();
+  final BproController bproController = Get.put(BproController());
+  final WithdrawalController withdrawalController =
+      Get.put(WithdrawalController());
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -77,33 +82,38 @@ class LoginScreen extends StatelessWidget {
                         ),
                         16.height,
 
-                        customTextField(
-                          controller: authController.loginpassword,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Please enter your password";
-                            }
-                            return null;
-                          },
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            size: 25,
-                            color: AppColors.appPrimaryColor,
-                          ),
-                          hintText: "Enter your password",
-                        ),
+                        Obx(() {
+                          return customTextField(
+                            isPassword: true,
+                            obscureText: authController.hidepassword.value,
+                            onSuffixTap: authController.showPassword,
+                            controller: authController.loginpassword,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please enter your password";
+                              }
+                              return null;
+                            },
+                            prefixIcon: Icon(
+                              Icons.lock,
+                              size: 25,
+                              color: AppColors.appPrimaryColor,
+                            ),
+                            hintText: "Enter your password",
+                          );
+                        }),
 
                         18.height,
-                        Align(
-                            alignment: Alignment.topRight,
-                            child: GestureDetector(
-                              onTap: () {
-                                Get.to(ForgetPasswordScreen());
-                              },
-                              child: CustomText(
-                                  text: "Forget Password?",
-                                  color: AppColors.darkGrey),
-                            )),
+                        // Align(
+                        //     alignment: Alignment.topRight,
+                        //     child: GestureDetector(
+                        //       onTap: () {
+                        //         Get.to(ForgetPasswordScreen());
+                        //       },
+                        //       child: CustomText(
+                        //           text: "Forget Password?",
+                        //           color: AppColors.darkGrey),
+                        //     )),
                         20.height,
                         // Register Button
                         Obx(() {
@@ -127,7 +137,8 @@ class LoginScreen extends StatelessWidget {
                                     if (_formKey.currentState!.validate()) {
                                       authController.userLogin();
                                       authController.saveUserData();
-                                     // authController.userApi();
+                                      // authController.userApi();
+                                      //  bproController.userApi();
                                     }
                                   },
                                 );
@@ -157,9 +168,16 @@ class LoginScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset(
-                              AppImages.whattasapplogo,
-                              height: 35,
+                            GestureDetector(
+                              onTap: () {
+                                bproController.launchUrl("https://wa.me/",
+                                    phonenumber:
+                                        withdrawalController.whatsappNumber);
+                              },
+                              child: Image.asset(
+                                AppImages.whattasapplogo,
+                                height: 35,
+                              ),
                             ),
                             15.width,
                             Tooltip(

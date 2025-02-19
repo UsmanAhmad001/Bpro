@@ -14,6 +14,7 @@ class HistoryTransactionController extends GetxController {
 
   @override
   void onInit() {
+    log("HI");
     fetchHistoryTransaction();
     super.onInit();
   }
@@ -31,6 +32,7 @@ class HistoryTransactionController extends GetxController {
         },
         body: body,
       );
+      log("HI");
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);

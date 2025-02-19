@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:bpro/controller/auth_controller.dart';
 import 'package:bpro/controller/bpro_controller.dart';
+import 'package:bpro/controller/withdrawal_controller.dart';
 import 'package:bpro/extensions/size_extention.dart';
 import 'package:bpro/extensions/sizebox_extention.dart';
 import 'package:bpro/utils/app_colors.dart';
@@ -16,9 +17,11 @@ import 'package:get/get.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
-  final BproController bproController = Get.put(BproController());
+  final BproController bproController = Get.find();
   final AuthController authController = Get.find();
   final _formkey = GlobalKey<FormState>();
+  final WithdrawalController withdrawalController =
+      Get.put(WithdrawalController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,37 +143,51 @@ class RegisterScreen extends StatelessWidget {
                         18.height,
 
                         // Password Field
-                        customTextField(
-                          controller: authController.password,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Please enter your password";
-                            }
-                            return null;
-                          },
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            size: 22,
-                            color: AppColors.appPrimaryColor,
-                          ),
-                          hintText: "Enter your password",
-                        ),
+                        Obx(() {
+                          return customTextField(
+                            hintText: "Enter your password",
+                            isPassword: true,
+                            obscureText: authController.hidepassword.value,
+                            onSuffixTap: authController.showPassword,
+                            controller: authController.password,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please enter your password";
+                              }
+                              return null;
+                            },
+                            prefixIcon: Icon(
+                              Icons.lock,
+                              size: 22,
+                              color: AppColors.appPrimaryColor,
+                            ),
+                          );
+                        }),
+
                         16.height,
                         // Confirm Password Field
-                        customTextField(
-                          controller: authController.confirmpassword,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Please enter your confirm password";
-                            }
-                            return null;
+                        Obx(
+                          () {
+                            return customTextField(
+                              isPassword: true,
+                              obscureText:
+                                  authController.confirmhidepassword.value,
+                              onSuffixTap: authController.showConfirmPassword,
+                              controller: authController.confirmpassword,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter your confirm password";
+                                }
+                                return null;
+                              },
+                              prefixIcon: Icon(
+                                Icons.lock,
+                                size: 22,
+                                color: AppColors.appPrimaryColor,
+                              ),
+                              hintText: "Enter your confirm password",
+                            );
                           },
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            size: 22,
-                            color: AppColors.appPrimaryColor,
-                          ),
-                          hintText: "Enter your confirm password",
                         ),
                         18.height,
                         Row(
@@ -199,7 +216,7 @@ class RegisterScreen extends StatelessWidget {
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
                                             bproController.launchUrl(
-                                                "https://www.monmatics.com/");
+                                                "${withdrawalController.privacy.toString()}");
                                           },
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
@@ -213,19 +230,19 @@ class RegisterScreen extends StatelessWidget {
                                           color: AppColors.darkGrey,
                                         ),
                                       ),
-                                      TextSpan(
-                                        text: 'Term & Conditions',
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            bproController.launchUrl(
-                                                "https://www.monmatics.com/");
-                                          },
-                                        style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.appPrimaryColor,
-                                        ),
-                                      ),
+                                      // TextSpan(
+                                      //   text: 'Term & Conditions',
+                                      //   recognizer: TapGestureRecognizer()
+                                      //     ..onTap = () {
+                                      //       bproController.launchUrl(
+                                      //           "https://www.monmatics.com/");
+                                      //     },
+                                      //   style: TextStyle(
+                                      //     decoration: TextDecoration.underline,
+                                      //     fontWeight: FontWeight.bold,
+                                      //     color: AppColors.appPrimaryColor,
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -263,18 +280,28 @@ class RegisterScreen extends StatelessWidget {
                                   borderRadius: 10,
                                   border: Colors.transparent,
                                   onPressed: () {
-                                    authController.userRegister();
-
                                     if (_formkey.currentState!.validate()) {
                                       if (!authController.check) {
-                                        Get.dialog(
-                                          customDialogueBox(
-                                            context,
-                                            "Please accept the Privacy Policy and Terms & Conditions before proceeding.",
-                                          ),
+                                        customDialogueBox(
+                                          context,
+                                          "Please accept the Privacy Policy and Terms & Conditions before proceeding.",
                                         );
                                       } else {
-                                        authController.userRegister();
+                                        if (authController.password.text ==
+                                            authController
+                                                .confirmpassword.text) {
+                                          authController.userRegister();
+                                          //log("Same");
+                                        } else {
+                                          Get.snackbar(
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
+                                              'Password Mismatch!',
+                                              'Please enter correct password and confirm password',
+                                              colorText: AppColors.white,
+                                              backgroundColor:
+                                                  AppColors.charcoalgrey);
+                                        }
                                       }
                                     }
                                   },

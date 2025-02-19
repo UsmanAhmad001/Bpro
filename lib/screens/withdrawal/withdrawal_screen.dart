@@ -1,3 +1,4 @@
+import 'package:bpro/controller/bpro_controller.dart';
 import 'package:bpro/controller/withdrawal_controller.dart';
 import 'package:bpro/extensions/size_extention.dart';
 import 'package:bpro/extensions/sizebox_extention.dart';
@@ -11,11 +12,24 @@ import 'package:bpro/widgets/custombutton.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class WithdrawalScreen extends StatelessWidget {
+class WithdrawalScreen extends StatefulWidget {
   WithdrawalScreen({super.key});
-  final WithdrawalController withdrawalController =
-      Get.put(WithdrawalController());
+
+  @override
+  State<WithdrawalScreen> createState() => _WithdrawalScreenState();
+}
+
+class _WithdrawalScreenState extends State<WithdrawalScreen> {
+  final WithdrawalController withdrawalController = Get.find();
+
   final _formKey = GlobalKey<FormState>();
+  @override
+  void initState() {
+    super.initState();
+    // Load user data when the screen opens
+    withdrawalController.checkTime();
+    withdrawalController.widrawalTime();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +176,14 @@ class WithdrawalScreen extends StatelessWidget {
                                   borderRadius: 10,
                                   border: AppColors.appPrimaryColor,
                                 )
-                              : Center(child: CustomText(text: "Widthdrw is not available at this time",color:AppColors.charcoalgrey ,fontSize: 17,fontWeight: FontWeight.bold,));
+                              : Center(
+                                  child: CustomText(
+                                  text:
+                                      "Widthdrw is not available at this time",
+                                  color: AppColors.charcoalgrey,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                ));
                         }),
                         20.height,
                       ],

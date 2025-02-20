@@ -5,6 +5,7 @@ import 'package:bpro/extensions/size_extention.dart';
 import 'package:bpro/extensions/sizebox_extention.dart';
 import 'package:bpro/screens/auth/forget_password.dart';
 import 'package:bpro/screens/auth/register_screen.dart';
+import 'package:bpro/screens/faq/faq_screen.dart';
 import 'package:bpro/utils/app_colors.dart';
 import 'package:bpro/utils/app_images.dart';
 import 'package:bpro/widgets/custom_text.dart';
@@ -104,16 +105,16 @@ class LoginScreen extends StatelessWidget {
                         }),
 
                         18.height,
-                        // Align(
-                        //     alignment: Alignment.topRight,
-                        //     child: GestureDetector(
-                        //       onTap: () {
-                        //         Get.to(ForgetPasswordScreen());
-                        //       },
-                        //       child: CustomText(
-                        //           text: "Forget Password?",
-                        //           color: AppColors.darkGrey),
-                        //     )),
+                        Align(
+                            alignment: Alignment.topRight,
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.to(ForgetPasswordScreen());
+                              },
+                              child: CustomText(
+                                  text: "Forget Password?",
+                                  color: AppColors.darkGrey),
+                            )),
                         20.height,
                         // Register Button
                         Obx(() {
@@ -182,10 +183,15 @@ class LoginScreen extends StatelessWidget {
                             15.width,
                             Tooltip(
                               message: "Help",
-                              child: Icon(
-                                Icons.help,
-                                size: 30,
-                                color: AppColors.appPrimaryColor,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.to(FaqScreen());
+                                },
+                                child: Icon(
+                                  Icons.help,
+                                  size: 30,
+                                  color: AppColors.appPrimaryColor,
+                                ),
                               ),
                             ),
                           ],

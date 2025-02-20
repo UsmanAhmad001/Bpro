@@ -5,6 +5,7 @@ import 'package:bpro/controller/withdrawal_controller.dart';
 import 'package:bpro/extensions/size_extention.dart';
 import 'package:bpro/extensions/sizebox_extention.dart';
 import 'package:bpro/screens/deposit/deposit_screen.dart';
+import 'package:bpro/screens/faq/faq_screen.dart';
 import 'package:bpro/screens/history/history_screen.dart';
 import 'package:bpro/screens/webview.dart';
 import 'package:bpro/screens/withdrawal/withdrawal_screen.dart';
@@ -388,8 +389,13 @@ class _BproDashboardScreenState extends State<BproDashboardScreen> {
                         15.width,
                         Tooltip(
                           message: "Help",
-                          child: Icon(Icons.help,
-                              size: 30, color: AppColors.appPrimaryColor),
+                          child: GestureDetector(
+                            onTap: () {
+                              Get.to(FaqScreen());
+                            },
+                            child: Icon(Icons.help,
+                                size: 30, color: AppColors.appPrimaryColor),
+                          ),
                         ),
                       ],
                     ),

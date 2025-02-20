@@ -14,6 +14,7 @@ customDialogueBox(BuildContext context, String message) {
   Widget continueButton = TextButton(
     child: CustomText(
       text: "Continue",
+      fontSize: 14,
       color: AppColors.white,
       fontWeight: FontWeight.bold,
     ),
@@ -29,7 +30,7 @@ customDialogueBox(BuildContext context, String message) {
       text: message,
       color: AppColors.white,
       fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontSize: 14,
     ),
     actions: [
       //  cancelButton,

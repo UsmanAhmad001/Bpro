@@ -216,7 +216,8 @@ class RegisterScreen extends StatelessWidget {
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
                                             bproController.launchUrl(
-                                                "${withdrawalController.privacy.toString()}");
+                                                withdrawalController.privacy
+                                                    .toString());
                                           },
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
@@ -253,11 +254,17 @@ class RegisterScreen extends StatelessWidget {
 
                         Padding(
                           padding: const EdgeInsets.only(left: 15, top: 15),
-                          child: CustomText(
-                            text: "Disclaimer",
-                            color: AppColors.darkGrey,
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.bold,
+                          child: GestureDetector(
+                            onTap: () {
+                              bproController.launchUrl(
+                                  withdrawalController.disclaimer.toString());
+                            },
+                            child: CustomText(
+                              text: "Disclaimer",
+                              color: AppColors.darkGrey,
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         20.height,
@@ -284,7 +291,7 @@ class RegisterScreen extends StatelessWidget {
                                       if (!authController.check) {
                                         customDialogueBox(
                                           context,
-                                          "Please accept the Privacy Policy and Terms & Conditions before proceeding.",
+                                          "Please accept the Privacy Policy before proceeding.",
                                         );
                                       } else {
                                         if (authController.password.text ==
